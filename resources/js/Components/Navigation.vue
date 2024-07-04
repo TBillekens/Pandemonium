@@ -10,6 +10,10 @@
             <i>home</i>
             <div>Home</div>
         </a>
+        <a>
+            <i>book</i>
+            <div>Library</div>
+        </a>
         </nav>
 </template>
 
