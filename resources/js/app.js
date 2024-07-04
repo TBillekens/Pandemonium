@@ -4,6 +4,7 @@ import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import beercss from "beercss";
 import materialDynamicColors from "material-dynamic-colors";
+import DefaultLayout from './Layouts/DefaultLayout.vue'
 
 createInertiaApp({
   resolve: name => {
@@ -11,7 +12,7 @@ createInertiaApp({
     return pages[`./Pages/${name}.vue`]
   },
   setup({ el, App, props, plugin }) {
-    createApp({ render: () => h(App, props) })
+    createApp({ render: () => h(DefaultLayout, [h(App, props)]) })
       .use(plugin)
       .mount(el)
   },
