@@ -12,7 +12,7 @@
     <article>
       <h5>Library</h5>
       <p>In this section of the application you can keep track of your person library using OpenLibrary.</p>
-      <button class="responsive small">Go to your library</button>
+      <a class="button responsive small" href="/library/">Go to Library</a>
     </article>
   </div>
 </template>

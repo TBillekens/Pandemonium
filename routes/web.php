@@ -23,4 +23,8 @@ Route::group(
         'prefix' => 'library',
     ], function () {
     Route::get('/', LibraryController::class.'@index')->name('library-index');
+    Route::get('/{id}', LibraryController::class.'@show')->name('library-show');
+    Route::post('/', LibraryController::class.'@create')->name('library-create');
+    Route::put('/{id}', LibraryController::class.'@edit')->name('library-edit');
+    Route::delete('/{id}', LibraryController::class.'@delete')->name('library-delete');
 });
