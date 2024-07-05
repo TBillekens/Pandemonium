@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class AuthController extends Controller
 {
@@ -19,12 +21,9 @@ class AuthController extends Controller
 
         $user = User::create($data);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        Auth::login($user);
 
-        return [
-            'user' => $user,
-            'token' => $token,
-        ];
+        return to_route('dashboard');
     }
 
     public function login(Request $request)
@@ -34,42 +33,23 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = User::where('email', $data['email'])->first();
+        if (Auth::attempt($data)) {
+            $request->session()->regenerate();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
-            return response([
-                'message' => 'Bad credentials',
-            ], 401);
-        }
+            return to_route('dashboard');
+        } 
 
-        $token = $user->createToken('auth_token')->plainTextToken; 
-
-        return [
-            'user' => $user,
-            'token' => $token,
-        ];
+        return back()->withErrors([
+            'message' => 'Invalid credentials',
+                ]);
     }
 
     public function logout(Request $request)
     {
-        $data = $request->validate([
-            'token' => 'required|string',
-            'email' => 'required|email',
-        ]);
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        $user = User::where('email', $data['email'])->first();
-
-        try {
-            $user->tokens()->where('id', $data['token'])->delete();
-        } catch (\Throwable $th) {
-            return response([
-                'message' => 'Bad credentials',
-            ], 401);
-        }
-
-        return [
-            'message' => 'Logged out',
-            'user' => $user,
-        ];
+        return to_route('dashboard');
     }
 }

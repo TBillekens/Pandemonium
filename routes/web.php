@@ -2,15 +2,16 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LibraryController;
+use App\Http\Controllers\OpenLibraryController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
     return Inertia::render('Dashboard');
-});
+})->name('dashboard');
 
-Route::group(
-    [
+Route::group([
         'prefix' => 'auth',
     ], function () {
         Route::post('/register', AuthController::class.'@register')->name('register');
@@ -18,13 +19,10 @@ Route::group(
         Route::post('/logout', AuthController::class.'@logout')->name('logout');
 });
 
-Route::group(
-    [
-        'prefix' => 'library',
+Route::group([
+        'middleware' => 'auth',
     ], function () {
-    Route::get('/', LibraryController::class.'@index')->name('library-index');
-    Route::get('/{id}', LibraryController::class.'@show')->name('library-show');
-    Route::post('/', LibraryController::class.'@create')->name('library-create');
-    Route::put('/{id}', LibraryController::class.'@edit')->name('library-edit');
-    Route::delete('/{id}', LibraryController::class.'@delete')->name('library-delete');
+        Route::resource('library', LibraryController::class)->except(['delete']);
+        Route::get('openlibrary/search', OpenLibraryController::class.'@search')->name('openlibrary.search');
+
 });
