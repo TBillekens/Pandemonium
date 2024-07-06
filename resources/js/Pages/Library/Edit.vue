@@ -1,6 +1,5 @@
 <template>
-    <div>
-        <h5>Edit your library</h5>
+        <h1>Edit your library</h1>
         <article>
             <p>
                 Here you can edit your library.
@@ -15,7 +14,6 @@
                 </nav>
             </form>
         </article>
-    </div>
 </template>
 
 <script>

@@ -1,6 +1,5 @@
 <template>
-    <div>
-        <h5>Create your new library</h5>
+        <h1>Create your new library</h1>
         <article>
             <p>
                 Here you can create a new library to keep track of your books.
@@ -15,7 +14,6 @@
                 </nav>
             </form>
         </article>
-    </div>
 </template>
 
 <script>

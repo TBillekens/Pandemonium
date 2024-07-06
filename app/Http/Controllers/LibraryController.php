@@ -19,10 +19,13 @@ class LibraryController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show(Library $library)
     {
+        $books = $library->books;
+
         return Inertia::render('Library/Show', [
-            'id' => $id,
+            'library' => $library,
+            'books' => $books,
         ]);
     }
 
@@ -31,30 +34,28 @@ class LibraryController extends Controller
         return Inertia::render('Library/Create');
     }
 
-    public function edit($id)
+    public function edit(Library $library)
     {
-        $library = Library::find($id);
-
         return Inertia::render('Library/Edit', [
             'library' => $library,
         ]);
     }
 
-    public function destroy($id)
+    public function destroy(Library $library)
     {
-        Library::destroy($id);
+        $library->delete();
 
         return redirect()->route('library.index');
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Library $library)
     {
         $data = $request->validate([
             'user_id' => 'required|integer',
             'title' => 'required|string',
         ]);
 
-        Library::where('id', $id)->update($data);
+        $library->update($data);
 
         return redirect()->route('library.index');
     }
@@ -65,7 +66,7 @@ class LibraryController extends Controller
             'user_id' => 'required|integer',
             'title' => 'required|string',
         ]);
-        
+
         Library::create($data);
 
         return redirect()->route('library.index');

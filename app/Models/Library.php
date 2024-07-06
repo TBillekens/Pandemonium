@@ -13,4 +13,9 @@ class Library extends Model
         'title',
         'user_id',
     ];
+
+    public function books()
+    {
+        return $this->hasMany(Book::class);
+    }
 }
