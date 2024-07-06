@@ -28,39 +28,46 @@ class LibraryController extends Controller
 
     public function create()
     {
-        error_log('create');
         return Inertia::render('Library/Create');
     }
 
     public function edit($id)
     {
+        $library = Library::find($id);
+
         return Inertia::render('Library/Edit', [
-            'id' => $id,
+            'library' => $library,
         ]);
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
+        Library::destroy($id);
+
+        return redirect()->route('library.index');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'user_id' => 'required|integer',
+            'title' => 'required|string',
+        ]);
+
+        Library::where('id', $id)->update($data);
+
+        return redirect()->route('library.index');
     }
 
     public function store(Request $request)
     {
-        if ($request->has('id')) {
-            $data = $request->validate([
-                'id' => 'required|integer',
-                'title' => 'required|string',
-            ]);
+        $data = $request->validate([
+            'user_id' => 'required|integer',
+            'title' => 'required|string',
+        ]);
+        
+        Library::create($data);
 
-            Library::where('id', $data['id'])->update($data);
-        } else {
-            $data = $request->validate([
-                'id' => 'integer|string|required',
-                'title' => 'required|string|required',
-            ]);
-
-            Library::create($data);
-        }
-
-        return redirect()->route('library-index');
+        return redirect()->route('library.index');
     }
 }

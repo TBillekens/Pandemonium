@@ -1,17 +1,17 @@
 <template>
     <div>
+        <h5>Create your new library</h5>
         <article>
-            <h5>Create your new library</h5>
             <p>
                 Here you can create a new library to keep track of your books.
             </p>
             <form @submit.prevent="createLibrary">
-                <div class="field label round border small">
+                <div class="field label round border small-round">
                 <input v-model="title" type="text" lazy>
                 <label>Title</label>
                 </div>
                 <nav class="right-align">
-                    <button class="button small">Create</button>
+                    <button class="button small-round">Create</button>
                 </nav>
             </form>
         </article>
@@ -22,19 +22,21 @@
     import { ref } from 'vue';
 
     export default {
-        data() {
-            return {
-                title: ''
-            }
+        props: {
+            auth: Object,
         },
-        setup() {
+        setup(props) {
+            const title = ref('');
+            const user = props.auth.user;
+
             return {
-                title: ref('')
+                title,
+                user,
             }
         },
         methods: {
             createLibrary() {
-                this.$inertia.post('/library/store', {id: 1, title: this.title});
+                this.$inertia.post('/library', {user_id: this.user.id, title: this.title});
             }
         }
     }

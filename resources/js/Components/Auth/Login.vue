@@ -5,18 +5,18 @@
         </header>
         <form @submit.prevent="login">
             <span v-if="failedLoginError" class="error-text">{{ failedLoginError }}</span>
-            <div class="field label round border small">
+            <div class="field label round border small-round">
                 <input v-model="email" type="text" lazy>
                 <label>Email</label>
                 <span v-if="emailError" class="error">{{ emailError }}</span>
             </div>
-            <div class="field label round border small">
+            <div class="field label round border small-round">
                 <input v-model="password" type="password" lazy>
                 <label>Password</label>
                 <span v-if="passwordError" class="error">{{ passwordError }}</span>
             </div>
             <nav class="right-align">
-                <button class="button small">Login</button>
+                <button class="button small-round">Login</button>
             </nav>
         </form>
     </dialog>

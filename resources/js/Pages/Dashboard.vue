@@ -15,7 +15,7 @@
           <h5>Library</h5>
           <p>In this section of the application you can keep track of your personal collection using OpenLibrary.</p>
           <nav class="right-align">
-            <a class="button small" href="/library/">Go to Library</a>
+            <a class="button small-round" href="/library/">Go to Library</a>
           </nav>
         </article>    
       </div>
@@ -24,7 +24,7 @@
           <h5>OpenLibrary</h5>
           <p>OpenLibrary is a free, open source project that allows you to search for books and authors.</p>
           <nav class="right-align">
-            <a class="button small" href="">Go to OpenLibrary</a>
+            <a class="button small-round" href="">Go to OpenLibrary</a>
           </nav>
         </article>  
       </div>

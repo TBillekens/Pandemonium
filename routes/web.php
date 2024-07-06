@@ -22,7 +22,7 @@ Route::group([
 Route::group([
         'middleware' => 'auth',
     ], function () {
-        Route::resource('library', LibraryController::class)->except(['delete']);
+        Route::resource('library', LibraryController::class);
         Route::get('openlibrary/search', OpenLibraryController::class.'@search')->name('openlibrary.search');
 
 });

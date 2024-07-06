@@ -4,24 +4,24 @@
             <h6>Register</h6>
         </header>
         <form>
-            <div class="field label round border small">
+            <div class="field label round border small-round">
                 <input type="text" lazy>
                 <label>Username</label>
             </div>
-            <div class="field label round border small">
+            <div class="field label round border small-round">
                 <input type="email" lazy>
                 <label>Email</label>
             </div>
-            <div class="field label round border small">
+            <div class="field label round border small-round">
                 <input type="password" lazy>
                 <label>Password</label>
             </div>
-            <div class="field label round border small">
+            <div class="field label round border small-round">
                 <input type="password" lazy>
                 <label>Repeat Password</label>
             </div>
             <nav class="right-align">
-                <button class="button small">Register</button>
+                <button class="button small-round">Register</button>
             </nav>
         </form>
     </dialog>
