@@ -11,10 +11,13 @@
                 <i>person</i>
                 <span>Login</span>
             </button>
-            <button data-ui="#registerDialog" class="border right-round max small">
+            <button
+                data-ui="#registerDialog"
+                class="border right-round max small"
+            >
                 <i>edit</i>
                 <span>Register</span>
-            </button>    
+            </button>
         </nav>
         <nav v-if="$page.props.auth.user" class="no-space center-align">
             <button class="border left-round max small">
@@ -32,7 +35,11 @@
         </a>
         <a href="/library/">
             <i>book</i>
-            <div>Library</div>
+            <div>Libraries</div>
+        </a>
+        <a href="/openlibrary/">
+            <i>api</i>
+            <div>OpenLibrary</div>
         </a>
     </nav>
 
@@ -41,21 +48,28 @@
 </template>
 
 <script>
-import Login from './Auth/Login.vue'
-import Register from './Auth/Register.vue'
+import Login from "./Auth/Login.vue";
+import Register from "./Auth/Register.vue";
 
 export default {
     name: "Navigation",
     components: {
         Login,
-        Register 
-    }, 
+        Register,
+    },
+    props: {
+        auth: Object,
+    },
     methods: {
         logout() {
-            this.$inertia.post('/auth/logout', {}, {
-                preserveState: false,
-            });
-        }
-    }
-}
+            this.$inertia.post(
+                "/auth/logout",
+                {},
+                {
+                    preserveState: false,
+                }
+            );
+        },
+    },
+};
 </script>

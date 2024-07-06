@@ -4,16 +4,20 @@
             <h6>Login</h6>
         </header>
         <form @submit.prevent="login">
-            <span v-if="failedLoginError" class="error-text">{{ failedLoginError }}</span>
+            <span v-if="failedLoginError" class="error-text">{{
+                failedLoginError
+            }}</span>
             <div class="field label round border small-round">
-                <input v-model="email" type="text" lazy>
+                <input v-model="email" type="text" lazy />
                 <label>Email</label>
                 <span v-if="emailError" class="error">{{ emailError }}</span>
             </div>
             <div class="field label round border small-round">
-                <input v-model="password" type="password" lazy>
+                <input v-model="password" type="password" lazy />
                 <label>Password</label>
-                <span v-if="passwordError" class="error">{{ passwordError }}</span>
+                <span v-if="passwordError" class="error">{{
+                    passwordError
+                }}</span>
             </div>
             <nav class="right-align">
                 <button class="button small-round">Login</button>
@@ -26,33 +30,33 @@
 export default {
     data() {
         return {
-            email: '',
-            password: '',
-            emailError: '',
-            passwordError: '',
-            failedLoginError: ''
-        }
-    }, 
+            email: "",
+            password: "",
+            emailError: "",
+            passwordError: "",
+            failedLoginError: "",
+        };
+    },
     computed: {
         isFormInvalid() {
             return !!this.emailError || !!this.passwordError;
-        }
+        },
     },
     methods: {
         validateEmail() {
             if (!this.email) {
-                this.emailError = 'Email is required';
-            } else if (!this.email.includes('@')) {
-                this.emailError = 'Email is invalid';
+                this.emailError = "Email is required";
+            } else if (!this.email.includes("@")) {
+                this.emailError = "Email is invalid";
             } else {
-                this.emailError = '';
+                this.emailError = "";
             }
         },
         validatePassword() {
             if (!this.password) {
-                this.passwordError = 'Password is required';
+                this.passwordError = "Password is required";
             } else {
-                this.passwordError = '';
+                this.passwordError = "";
             }
         },
         async login() {
@@ -61,24 +65,28 @@ export default {
 
             if (this.isFormInvalid) return;
 
-            this.$inertia.post('/auth/login', {
-                email: this.email,
-                password: this.password
-            }, {
-                onSuccess: () => {
-                    this.email = '';
-                    this.password = '';
-                    this.emailError = '';
-                    this.passwordError = '';
-                    this.loginError = '';
-                    ui('#loginDialog');
+            this.$inertia.post(
+                "/auth/login",
+                {
+                    email: this.email,
+                    password: this.password,
                 },
-                onError: (error) => {
-                    console.log(error);
-                    this.failedLoginError = error.message ?? '';
+                {
+                    onSuccess: () => {
+                        this.email = "";
+                        this.password = "";
+                        this.emailError = "";
+                        this.passwordError = "";
+                        this.loginError = "";
+                        ui("#loginDialog");
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                        this.failedLoginError = error.message ?? "";
+                    },
                 }
-            });
-            }
-        }
-    }
+            );
+        },
+    },
+};
 </script>
