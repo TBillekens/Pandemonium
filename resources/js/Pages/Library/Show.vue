@@ -30,19 +30,16 @@
 import { ref } from "vue";
 
 export default {
-    props: {
-        auth: Object,
-        library: Object,
-        books: Array,
-    },
-    setup(props) {
-        const user = props.auth.user;
-        const library = ref(props.library);
-        const books = ref(props.books);
-
-        return {
-            library,
-        };
+    computed: {
+        auth() {
+            return this.$page.props.auth;
+        },
+        library() {
+            return this.$page.props.library;
+        },
+        books() {
+            return this.$page.props.books;
+        },
     },
     methods: {
         deleteLibrary(id) {

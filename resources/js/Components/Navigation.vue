@@ -6,7 +6,7 @@
             </nav>
         </header>
 
-        <nav v-if="!$page.props.auth.user" class="no-space center-align">
+        <nav v-if="!auth.user" class="no-space center-align">
             <button data-ui="#loginDialog" class="border left-round max small">
                 <i>person</i>
                 <span>Login</span>
@@ -19,10 +19,10 @@
                 <span>Register</span>
             </button>
         </nav>
-        <nav v-if="$page.props.auth.user" class="no-space center-align">
+        <nav v-if="auth.user" class="no-space center-align">
             <button class="border left-round max small">
                 <i>person</i>
-                <span>{{ $page.props.auth.user.name }}</span>
+                <span>{{ auth.user.name }}</span>
             </button>
             <button @click="logout" class="border right-round max small">
                 <i>logout</i>
@@ -57,8 +57,10 @@ export default {
         Login,
         Register,
     },
-    props: {
-        auth: Object,
+    computed: {
+        auth() {
+            return this.$page.props.auth;
+        },
     },
     methods: {
         logout() {

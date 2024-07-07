@@ -1,42 +1,45 @@
 <template>
-        <h1>Edit your library</h1>
-        <article>
-            <p>
-                Here you can edit your library.
-            </p>
-            <form @submit.prevent="updateLibrary">
-                <div class="field label round border small-round">
-                    <input v-model="title" type="text" lazy>
-                    <label>Title</label>
-                </div>
-                <nav class="right-align">
-                    <button class="button small-round">Update</button>
-                </nav>
-            </form>
-        </article>
+    <h1>Edit your library</h1>
+    <article>
+        <p>Here you can edit your library.</p>
+        <form @submit.prevent="updateLibrary">
+            <div class="field label round border small-round">
+                <input v-model="title" type="text" lazy />
+                <label>Title</label>
+            </div>
+            <nav class="right-align">
+                <button class="button small-round">Update</button>
+            </nav>
+        </form>
+    </article>
 </template>
 
 <script>
-    import { ref } from 'vue';
+import { ref } from "vue";
 
-    export default {
-        props: {
-            auth: Object,
-            library: Object,
+export default {
+    computed: {
+        auth() {
+            return this.$page.props.auth;
         },
-        setup(props) {
-            const title = ref(props.library.title);
-            const user = props.auth.user;
+        library() {
+            return this.$page.props.library;
+        },
+    },
+    setup(props) {
+        const title = ref(library.title);
 
-            return {
-                title,
-                user,
-            }
+        return {
+            title,
+        };
+    },
+    methods: {
+        updateLibrary() {
+            this.$inertia.put(`/library/${this.library.id}`, {
+                user_id: this.auth.user.id,
+                title: this.title,
+            });
         },
-        methods: {
-            updateLibrary() {
-                this.$inertia.put(`/library/${this.library.id}`, {user_id: this.user.id, title: this.title});
-            }
-        }
-    }
+    },
+};
 </script>

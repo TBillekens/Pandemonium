@@ -2,18 +2,21 @@
     <body class="dark">
         <Navigation />
         <main class="responsive">
+            <FlashMessages />
             <slot></slot>
-    </main>
+        </main>
     </body>
 </template>
 
 <script>
-import Navigation from '../Components/Navigation.vue';
+import Navigation from "../Components/Navigation.vue";
+import FlashMessages from "../Components/FlashMessages.vue";
 
 export default {
     name: "DefaultLayout",
     components: {
-        Navigation
-    }
-}
+        Navigation,
+        FlashMessages,
+    },
+};
 </script>

@@ -49,18 +49,13 @@
 import { ref } from "vue";
 
 export default {
-    props: {
-        auth: Object,
-        libraries: Array,
-    },
-    setup(props) {
-        const user = props.auth.user;
-        const libraries = ref(props.libraries);
-
-        return {
-            user,
-            libraries,
-        };
+    computed: {
+        auth() {
+            return this.$page.props.auth;
+        },
+        libraries() {
+            return this.$page.props.libraries;
+        },
     },
     methods: {
         deleteLibrary(id) {

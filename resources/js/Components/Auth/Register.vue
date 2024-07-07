@@ -5,19 +5,19 @@
         </header>
         <form>
             <div class="field label round border small-round">
-                <input type="text" lazy>
+                <input type="text" lazy />
                 <label>Username</label>
             </div>
             <div class="field label round border small-round">
-                <input type="email" lazy>
+                <input type="email" lazy />
                 <label>Email</label>
             </div>
             <div class="field label round border small-round">
-                <input type="password" lazy>
+                <input type="password" lazy />
                 <label>Password</label>
             </div>
             <div class="field label round border small-round">
-                <input type="password" lazy>
+                <input type="password" lazy />
                 <label>Repeat Password</label>
             </div>
             <nav class="right-align">
@@ -31,26 +31,30 @@
 export default {
     data() {
         return {
-            username: '',
-            email: '',
-            password: '',
-            repeatPassword: ''
-        }
+            username: "",
+            email: "",
+            password: "",
+            repeatPassword: "",
+        };
+    },
+    computed: {
+        auth() {
+            return this.$page.props.auth;
+        },
     },
     methods: {
         async register() {
             try {
-                const response = this.$inertia.post('/register', {
+                const response = this.$inertia.post("/register", {
                     username: this.username,
                     email: this.email,
                     password: this.password,
                 });
-                this.$inertia.visit('/');
+                this.$inertia.visit("/");
             } catch (error) {
-                console.error('Registration failed:', error);
+                console.error("Registration failed:", error);
             }
-        }
-    }
-}
-
+        },
+    },
+};
 </script>

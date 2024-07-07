@@ -41,6 +41,9 @@ export default {
         isFormInvalid() {
             return !!this.emailError || !!this.passwordError;
         },
+        auth() {
+            return this.$page.props.auth;
+        },
     },
     methods: {
         validateEmail() {
