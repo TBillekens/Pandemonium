@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Services\OpenLibraryService;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class OpenLibraryController extends Controller
 {
     public function index() {
-        return Inertia::render('OpenLibrary/Index');
+        $libraries = Auth::user()->libraries;
+
+        return Inertia::render('OpenLibrary/Index', [
+            'libraries' => $libraries
+        ]);
     }
 
     public function search(OpenLibraryService $openLibraryService) {
@@ -17,5 +22,4 @@ class OpenLibraryController extends Controller
 
         return response()->json($response);
     }
-
 }     
