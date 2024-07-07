@@ -45,6 +45,8 @@ class LibraryController extends Controller
     {
         $library->delete();
 
+        session()->flash('message', 'Library deleted successfully!');
+
         return redirect()->route('library.index');
     }
 
@@ -57,6 +59,8 @@ class LibraryController extends Controller
 
         $library->update($data);
 
+        session()->flash('message', 'Library updated successfully!');
+
         return redirect()->route('library.index');
     }
 
@@ -68,6 +72,8 @@ class LibraryController extends Controller
         ]);
 
         Library::create($data);
+
+        session()->flash('message', 'Library created successfully!');
 
         return redirect()->route('library.index');
     }
