@@ -35,6 +35,7 @@ return [
         ],
     ],
     'openlibrary' => [
+        'covers_url' => env('COVERS_OPENLIBRARY_API_URL'),
         'url' => env('OPENLIBRARY_API_URL'),
     ],
 
