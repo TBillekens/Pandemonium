@@ -23,6 +23,8 @@ class AuthController extends Controller
 
         Auth::login($user);
 
+        session()->flash('message', 'Account created successfully!');
+
         return to_route('dashboard');
     }
 
@@ -36,8 +38,12 @@ class AuthController extends Controller
         if (Auth::attempt($data)) {
             $request->session()->regenerate();
 
+            session()->flash('message', 'Logged in successfully!');
+
             return to_route('dashboard');
         } 
+
+        session()->flash('message', 'Invalid credentials');
 
         return back()->withErrors([
             'message' => 'Invalid credentials',
@@ -49,6 +55,8 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        session()->flash('message', 'Logged out successfully!');
 
         return to_route('dashboard');
     }
