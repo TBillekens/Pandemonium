@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the libraries for the user.
+     */
+    public function libraries()
+    {
+        return $this->hasMany(Library::class);
+    }
 }
