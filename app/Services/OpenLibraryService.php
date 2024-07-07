@@ -7,13 +7,15 @@ use Illuminate\Support\Facades\Http;
 class OpenLibraryService extends Service
 {
     private $url;
+    private $coverUrl;
 
     public function __construct()
     {
         $this->url = config('services.openlibrary.url') . '/search.json';
+        $this->coverUrl = config('services.openlibrary.covers_url');
     }
 
-    public function request($method, $params = [], $headers = [])
+    public function request($url, $method, $params = [], $headers = [])
     {
         $response = Http::withHeaders($headers)->$method($this->url, $params);
 
@@ -26,7 +28,7 @@ class OpenLibraryService extends Service
 
     public function search($query)
     {
-        $response = $this->request('get', ['q' => $query]);
+        $response = $this->request($this->url, 'get', ['q' => $query]);
 
         return $response;
     }
