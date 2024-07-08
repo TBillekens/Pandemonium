@@ -16,11 +16,12 @@
                     }}</span>
                 </div>
                 <nav class="row">
-                    <nav v-if="!loading && openLibraryResponse" class="row">
+                    <nav class="row">
                         <select
                             v-for="library in libraries"
                             :key="library.id"
                             v-model="selectedLibraryId"
+                            @change="getBooksInLibrary"
                             class="button small-round"
                         >
                             <option :value="library.id">
@@ -74,38 +75,50 @@
                             <div class="absolute center middle">
                                 <i
                                     v-if="doc.cover_i"
-                                    :id="`hoverImage-${doc.cover_i}`"
+                                    :id="`tippy-${doc.cover_i}`"
                                     >image</i
                                 >
                                 <i v-else>error</i>
                             </div>
                         </td>
                         <td>
-                            {{ doc.title }}
+                            {{ truncateText(doc.title) }}
                         </td>
                         <td v-if="doc.author_name">
-                            {{ doc.author_name.join(", ") }}
+                            {{ truncateText(doc.author_name.join(", ")) }}
                         </td>
                         <td v-else>-</td>
                         <td v-if="doc.publisher">
-                            {{ doc.publisher.join(", ") }}
+                            {{ truncateText(doc.publisher.join(", ")) }}
                         </td>
                         <td v-else>-</td>
                         <td v-if="doc.publish_date">
-                            {{ doc.publish_date.join(", ") }}
+                            {{ truncateText(doc.publish_date.join(", ")) }}
                         </td>
                         <td v-else>-</td>
                         <td v-if="doc.language">
-                            {{ doc.language.join(", ") }}
+                            {{ truncateText(doc.language.join(", ")) }}
                         </td>
                         <td v-else>-</td>
                         <td>
                             <div class="absolute center middle">
                                 <button
+                                    v-if="getBookFromLibrary(doc) === null"
                                     @click="addBookToLibrary(doc)"
                                     class="square round extra"
                                 >
                                     <i>add</i>
+                                </button>
+                                <button
+                                    v-else
+                                    @click="
+                                        removeBookFromLibrary(
+                                            getBookFromLibrary(doc)
+                                        )
+                                    "
+                                    class="square round extra"
+                                >
+                                    <i>remove</i>
                                 </button>
                             </div>
                         </td>
@@ -120,9 +133,9 @@
 </template>
 
 <script>
-import { ref, toRaw } from "vue";
 import axios from "axios";
 import tippy from "tippy.js";
+import { nextTick } from "vue";
 
 export default {
     data() {
@@ -131,15 +144,17 @@ export default {
             searchError: "",
             isFormInvalid: false,
             openLibraryResponse: null,
-            loading: false,
             selectedLibraryId: null,
+            booksInLibrary: [],
+            loading: false,
         };
     },
     props: {
         errors: Object,
         auth: Object,
-        libraries: Array,
         flash: Object,
+        libraries: Array,
+        books: Array,
     },
     methods: {
         validateSearch() {
@@ -158,21 +173,97 @@ export default {
             if (this.isFormInvalid) return;
 
             this.loading = true;
-
             axios
                 .post("/openlibrary/search", {
                     searchItem: this.searchItem,
                 })
                 .then((response) => {
                     this.openLibraryResponse = response.data;
-                    this.setImage();
+                    this.loadImages(); // Load images after setting the response
                 })
                 .catch((error) => {
                     console.log(error);
                 })
                 .finally(() => {
                     this.loading = false;
+                    this.loadImages();
                 });
+        },
+
+        async addBookToLibrary(doc) {
+            this.$inertia.post(
+                `/library/${this.selectedLibraryId}/book`,
+                {
+                    library_id: this.selectedLibraryId,
+                    key: doc.key,
+                    data: doc,
+                },
+                {
+                    //todo: probably is doing something wrong here but no time to fix it
+                    onError: (errors) => {
+                        for (const key in errors) {
+                            if (key === "library_id") {
+                                this.flash.error = "Please select a library";
+                            } else {
+                                this.flash.error = errors[key];
+                            }
+                        }
+                    },
+                    onFinish: () => {
+                        this.getBooksInLibrary();
+                    },
+                }
+            );
+        },
+
+        async removeBookFromLibrary(book) {
+            this.$inertia.delete(
+                `/library/${this.selectedLibraryId}/book/${book.id}`,
+                {
+                    onError: (errors) => {
+                        for (const key in errors) {
+                            this.flash.error = errors[key];
+                        }
+                    },
+                    onFinish: () => {
+                        this.getBooksInLibrary();
+                    },
+                }
+            );
+        },
+
+        async getBooksInLibrary() {
+            console.log(this.selectedLibraryId);
+
+            axios
+                .get(`/library/${this.selectedLibraryId}/books`)
+                .then((response) => {
+                    this.booksInLibrary = response.data;
+                    console.log(this.booksInLibrary);
+                })
+                .catch((error) => {
+                    for (const key in error) {
+                        this.flash.error = error[key];
+                    }
+                })
+                .finally(() => {});
+        },
+
+        getBookFromLibrary(doc) {
+            const foundBook = this.booksInLibrary.find(
+                (book) => book.key === doc.key
+            );
+            return foundBook || null;
+        },
+
+        async loadImages() {
+            if (this.openLibraryResponse) {
+                nextTick(() => {
+                    this.openLibraryResponse.docs.forEach((doc) => {
+                        if (doc.cover_i) this.imageShow(doc);
+                    });
+                });
+            }
         },
 
         async fetchImage(url) {
@@ -184,50 +275,27 @@ export default {
             });
         },
 
-        async setImage() {
-            this.openLibraryResponse.docs.forEach(async (doc) => {
-                if (doc.cover_i) {
-                    const url = `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`;
-                    try {
-                        doc.cover = await this.fetchImage(url);
-                    } catch (error) {
-                        doc.cover = null;
-                    }
-                }
+        async imageShow(doc) {
+            const url = `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`;
 
-                const image = document.getElementById(
-                    `hoverImage-${doc.cover_i}`
-                );
+            try {
+                doc.cover = await this.fetchImage(url);
 
-                if (doc.cover === null || doc.cover === undefined) {
-                    return;
-                }
-
-                tippy(image, {
-                    content: `<img src="${doc.cover}" alt="${doc.title}" />`,
+                tippy(document.getElementById(`tippy-${doc.cover_i}`), {
+                    content: `<img src="${url}" alt="Book cover" />`,
                     allowHTML: true,
-                    interactive: true,
-                    placement: "top",
+                    animation: "scale",
                 });
-            });
+            } catch (error) {
+                doc.cover = null;
+            }
         },
 
-        async addBookToLibrary(doc) {
-            this.$inertia.post(
-                `/library/${this.selectedLibraryId}/book`,
-                {
-                    data: doc,
-                    library_id: this.selectedLibraryId,
-                },
-                {
-                    //todo: probably is doing something wrong here but no time to fix it
-                    onError: (errors) => {
-                        for (const key in errors) {
-                            this.flash.error = errors[key];
-                        }
-                    },
-                }
-            );
+        truncateText(text) {
+            if (text.length > 50) {
+                return text.substring(0, 50) + "...";
+            }
+            return text;
         },
     },
 };

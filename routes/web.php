@@ -26,7 +26,9 @@ Route::group([
     'middleware' => 'auth',
 ], function () {
     Route::resource('library', LibraryController::class);
-    Route::resource('library.book', BookController::class);
+    Route::get('/library/{library}/books', BookController::class . '@books')->name('library.books');
+    // Route::delete('/library/{library}/{book}', LibraryController::class . '@destroy')->name('library.destroy');
+    Route::resource('library.book', BookController::class)->except(['create', 'show', 'edit', 'update']);
     Route::get('/openlibrary/', OpenLibraryController::class . '@index')->name('openlibrary.index');
     Route::post('/openlibrary/search', OpenLibraryController::class . '@search')->name('openlibrary.search');
 });
