@@ -8,11 +8,7 @@
             <i>done</i>
             {{ flash.message }}
         </div>
-        <div
-            class="snackbar top active"
-            @click="closeMessage"
-            v-if="flash.error"
-        >
+        <div class="snackbar top active" @click="closeError" v-if="flash.error">
             <i>error</i>
             {{ flash.error }}
         </div>
