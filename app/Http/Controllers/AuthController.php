@@ -43,7 +43,7 @@ class AuthController extends Controller
             return to_route('dashboard');
         } 
 
-        session()->flash('message', 'Invalid credentials');
+        session()->flash('error', 'Invalid credentials');
 
         return back()->withErrors([
             'message' => 'Invalid credentials',
