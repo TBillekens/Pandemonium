@@ -20,7 +20,7 @@
             </button>
         </nav>
         <nav v-if="auth.user" class="no-space center-align">
-            <button class="border left-round max small">
+            <button class="border left-round max small" disabled>
                 <i>person</i>
                 <span>{{ auth.user.name }}</span>
             </button>
