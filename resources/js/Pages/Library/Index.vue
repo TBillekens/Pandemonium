@@ -46,16 +46,10 @@
 </template>
 
 <script>
-import { ref } from "vue";
-
 export default {
-    computed: {
-        auth() {
-            return this.$page.props.auth;
-        },
-        libraries() {
-            return this.$page.props.libraries;
-        },
+    props: {
+        auth: Object,
+        libraries: Array,
     },
     methods: {
         deleteLibrary(id) {

@@ -1,12 +1,12 @@
 <template>
-    <div v-if="$page.props.auth.user">
+    <div v-if="auth.user">
         <h1>Dashboard</h1>
         <div>
             <div class="grid">
                 <!-- first row need to be a full article -->
                 <div class="s12 m12 l12">
                     <article>
-                        <h5>Welcome {{ $page.props.auth.user.name }}!</h5>
+                        <h5>Welcome {{ auth.user.name }}!</h5>
                         <p>
                             This is your dashboard. From here you can access all
                             the features of the application.
@@ -51,3 +51,11 @@
         </article>
     </div>
 </template>
+
+<script>
+export default {
+    props: {
+        auth: Object,
+    },
+};
+</script>

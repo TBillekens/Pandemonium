@@ -44,6 +44,12 @@ class HandleInertiaRequests extends Middleware
                     'message' => fn () => $request->session()->get('message'),
                     'error' => fn () => $request->session()->get('error'),
                 ],
+                'config' => [
+                    'openlibrary' => [
+                        'covers_url' => config('services.openlibrary.covers_url'),
+                        'url' => config('services.openlibrary.url'),
+                    ],
+                ]
         ]);
     }
 }

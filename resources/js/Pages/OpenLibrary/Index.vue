@@ -116,7 +116,7 @@
                                             getBookFromLibrary(doc)
                                         )
                                     "
-                                    class="square round extra"
+                                    class="border square round extra"
                                 >
                                     <i>remove</i>
                                 </button>
@@ -153,6 +153,7 @@ export default {
         errors: Object,
         auth: Object,
         flash: Object,
+        config: Object,
         libraries: Array,
         books: Array,
     },
@@ -266,7 +267,7 @@ export default {
         },
 
         async imageShow(doc) {
-            const url = `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`;
+            const url = `${this.config.openlibrary.covers_url}/b/id/${doc.cover_i}-M.jpg`;
 
             try {
                 tippy(document.getElementById(`tippy-${doc.cover_i}`), {
