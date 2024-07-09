@@ -179,10 +179,11 @@ export default {
                 })
                 .then((response) => {
                     this.openLibraryResponse = response.data;
-                    this.loadImages(); // Load images after setting the response
                 })
                 .catch((error) => {
-                    console.log(error);
+                    for (const key in error) {
+                        this.flash.error = error[key];
+                    }
                 })
                 .finally(() => {
                     this.loading = false;
@@ -233,20 +234,16 @@ export default {
         },
 
         async getBooksInLibrary() {
-            console.log(this.selectedLibraryId);
-
             axios
                 .get(`/library/${this.selectedLibraryId}/books`)
                 .then((response) => {
                     this.booksInLibrary = response.data;
-                    console.log(this.booksInLibrary);
                 })
                 .catch((error) => {
                     for (const key in error) {
                         this.flash.error = error[key];
                     }
-                })
-                .finally(() => {});
+                });
         },
 
         getBookFromLibrary(doc) {
@@ -260,35 +257,24 @@ export default {
             if (this.openLibraryResponse) {
                 nextTick(() => {
                     this.openLibraryResponse.docs.forEach((doc) => {
-                        if (doc.cover_i) this.imageShow(doc);
+                        if (doc.cover_i !== null && doc.cover_i !== undefined) {
+                            this.imageShow(doc);
+                        }
                     });
                 });
             }
-        },
-
-        async fetchImage(url) {
-            const img = new Image();
-            return new Promise((resolve, reject) => {
-                img.onload = () => resolve(url);
-                img.onerror = () => reject(url);
-                img.src = url;
-            });
         },
 
         async imageShow(doc) {
             const url = `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`;
 
             try {
-                doc.cover = await this.fetchImage(url);
-
                 tippy(document.getElementById(`tippy-${doc.cover_i}`), {
                     content: `<img src="${url}" alt="Book cover" />`,
                     allowHTML: true,
                     animation: "scale",
                 });
-            } catch (error) {
-                doc.cover = null;
-            }
+            } catch (error) {}
         },
 
         truncateText(text) {
